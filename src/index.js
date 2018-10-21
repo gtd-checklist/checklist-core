@@ -8,13 +8,13 @@ const http = require('http');
 
 require('dotenv').config();
 
-const { user, activity, auth } = require('./api');
+const { user, activity, auth } = require('./routes');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/users', user);
+app.use('/user', user);
 app.use('/activity', activity);
 app.use('/auth', auth);
 

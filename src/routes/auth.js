@@ -1,5 +1,4 @@
 const express = require('express');
-// const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
@@ -10,16 +9,16 @@ router.post('/', async (req, res) => {
   const user = await User.findOne({ email }).select('+password');
 
   if (!user) {
-    res.status(403);
+    res.status(401).send('User not found');
+  } else if (!user.authenticate(password)) {
+    res.status(401).send('Password does not match');
+  } else {
+    const token = user.generateToken();
+
+    delete user.password; // This is not working :(
+
+    res.json({ token, user });
   }
-
-  if (!user.authenticate(password)) {
-    res.status(401);
-  }
-
-  const token = user.generateToken();
-
-  res.json({ token, user });
 });
 
 module.exports = router;
