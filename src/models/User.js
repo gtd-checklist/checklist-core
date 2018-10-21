@@ -2,9 +2,9 @@
 /* eslint-disable consistent-return */
 // disabled this rule because "function" in callbacks. Using arrow => function leads to wrong "this" context
 /* eslint func-names: 0 */
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt-nodejs');
-const jwt = require('jsonwebtoken');
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt-nodejs';
+import jwt from 'jsonwebtoken';
 
 require('dotenv').config();
 
@@ -71,4 +71,4 @@ UserSchema.method({
   }
 })
 
-module.exports = mongoose.model('User', UserSchema);
+export default mongoose.model('User', UserSchema);

@@ -4,7 +4,7 @@
   "main": "./src/index.js",
   "scripts": {
     "build": "gulp",
-    "start": "nodemon src",
+    "start": "gulp serve",
     "lint:js": "eslint ./src",
     "lint-staged": "lint-staged",
     "migrate": "migrate-mongo -f ./migrations/mongo/migrate-mongo-config.js",

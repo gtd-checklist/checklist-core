@@ -1,60 +1,88 @@
-const express = require('express');
+import express from 'express';
+import jwt from 'jsonwebtoken';
+
+import { Activity } from '../models';
+import getToken from '../middleware/validators';
 
 const router = express.Router();
+require('dotenv').config();
 
-/*
-const mongoose = require('mongoose');
-
-const { Activity } = require('../models');
-
-
-// @route GET /comments
-// @desc  Get All Comments
-// @access  Public
-router.get('/', async (req, res) => {
-  const comments = await Comment.find();
-  res.json(comments);
+// @route GET /activity
+// @desc Get All User Activity
+// @access By Token
+router.get('/', getToken, async (req, res) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
+    if (err) {
+      res.sendStatus(401);
+    } else { 
+      const activity = await Activity.find({ userId: authData.userId });
+      res.json(activity);
+    }
+  })
 });
 
-router.post('/', async (req, res) => {
-  const comment = req.body;
-  comment.authorId = new mongoose.Types.ObjectId('5bb0ac63be662302c80f8412'); // hardcoded user id
-  await Comment.create(comment, (err, com) => {
+// @route POST /activity
+// @desc Post New Activity
+// @access By Token
+router.post('/', getToken, async (req, res) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
-      console.log(err);
-      res.status(403).json({ success: false });
-    } else {
-      res.json(com);
+      res.sendStatus(401);
+    } else { 
+      const activity = req.body;
+      activity.userId = authData.userId;
+      await Activity.create(activity, (error, createdActivity) => {
+        if (error) {
+          res.sendStatus(400);
+        } else {
+          res.json(createdActivity);
+        }
+      });
     }
-  });
+  })
 });
 
-router.put('/', async (req, res) => {
-  const comment = req.body;
-  await Comment.findByIdAndUpdate(comment._id, { text: comment.text }, err => {
+// @route DELETE /activity
+// @desc Delete Activity By Title
+// @access By Token
+router.delete('/', getToken, async (req, res) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
-      console.log(err);
-      res.status(404).json({ success: false });
+      res.sendStatus(401);
     } else {
-      res.status(200).json({ success: true });
+      const activity = req.body;
+      await Activity.findOneAndDelete({title: activity.title, userId: authData.userId}, error => {
+        if (error) {
+          res.sendStatus(404);
+        } else {
+          res.sendStatus(200);
+        }
+      });
     }
-  });
-})
-
-router.delete('/', async (req, res) => {
-  await Comment.deleteOne({ _id: req.body.id }, err => {
-    if (err) {
-      console.log(err);
-      res.status(404).json({ success: false });
-    } else {
-      res.status(200).json({ success: true });
-    }
-  });
+  })
 });
 
-*/
+// This method is not into current project's documentation
+router.put('/', getToken, async (req, res) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
+    if (err) {
+      res.sendStatus(401);
+    } else {
+      const activity = req.body;
+      await Activity.findByIdAndUpdate(authData.userId, 
+        { title: activity.title, 
+          successCriteria: activity.successCriteria, 
+          frequency: activity.frequency,
+          status: activity.status,
+        }, (dbErr, updatedActivity) => {
+        if (dbErr) {
+          res.sendStatus(404);
+        } else {
+          res.json(updatedActivity);
+        }
+      });
+    }
+  })
+});
 
-module.exports = router;
-
-
-
+export default router;

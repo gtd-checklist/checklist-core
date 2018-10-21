@@ -1,26 +1,23 @@
 /* eslint-disable no-console */
-const express = require('express');
-// const jwt = require('jsonwebtoken');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const http = require('http');
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import http from 'http';
+
+import { user, activity, auth } from './routes';
 
 require('dotenv').config();
-
-const { user, activity, auth } = require('./routes');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/user', user);
-app.use('/activity', activity);
-app.use('/auth', auth);
+app.use('/api/user', user);
+app.use('/api/activity', activity);
+app.use('/api/auth', auth);
 
-const db = process.env.MONGO_HOST;
-
-mongoose.connect(db, { useNewUrlParser: true })
+mongoose.connect(process.env.MONGO_HOST, { useNewUrlParser: true })
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err));
 

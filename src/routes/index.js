@@ -1,5 +1,5 @@
-const user = require('./user');
-const activity = require('./activity');
-const auth = require('./auth');
+import user from './user';
+import activity from './activity';
+import auth from './auth';
 
-module.exports = { user, activity, auth };
+export { user, activity, auth };

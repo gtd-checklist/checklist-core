@@ -1,4 +1,4 @@
-const User = require('./User.js');
-const Activity = require('./Activity');
+import User from './User';
+import Activity from './Activity';
 
-module.exports = { User, Activity };
+export { User, Activity };
