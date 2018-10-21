@@ -1,4 +1,4 @@
-export default function getToken(req, res, next) {
+function getToken(req, res, next) {
   const bearerHeader = req.headers.authorization;
   if (typeof bearerHeader !== 'undefined') {
     const bearer = bearerHeader.split(' ');
@@ -9,3 +9,5 @@ export default function getToken(req, res, next) {
     res.sendStatus(401);
   }
 }
+
+module.exports = getToken;

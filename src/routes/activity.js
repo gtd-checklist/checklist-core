@@ -1,8 +1,8 @@
-import express from 'express';
-import jwt from 'jsonwebtoken';
+const express = require('express');
+const jwt = require('jsonwebtoken');
 
-import { Activity } from '../models';
-import getToken from '../middleware/validators';
+const { Activity } = require('../models');
+const getToken = require('../middleware/validators');
 
 const router = express.Router();
 require('dotenv').config();
@@ -85,4 +85,4 @@ router.put('/', getToken, async (req, res) => {
   })
 });
 
-export default router;
+module.exports = router;

@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import mongoose from 'mongoose';
-import http from 'http';
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const http = require('http');
 
-import { user, activity, auth } from './routes';
+const { user, activity, auth } = require('./src/routes');
 
 require('dotenv').config();
 
