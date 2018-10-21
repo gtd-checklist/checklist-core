@@ -1,6 +1,4 @@
-const ObjectId = require('mongodb').ObjectId;
-
-// TO DO
+const { ObjectId } = require('mongodb');
 
 module.exports = {
   async up(db) {
