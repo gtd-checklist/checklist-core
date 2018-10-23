@@ -13,76 +13,75 @@ require('dotenv').config();
 router.get('/', getToken, async (req, res) => {
   jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
     if (err) {
-      res.sendStatus(401);
-    } else { 
-      const activity = await Activity.find({ userId: authData.userId });
-      res.json(activity);
+      return res.sendStatus(401);
     }
-  })
+    const activity = await Activity.find({ userId: authData.userId });
+    return res.json(activity);
+  });
 });
 
 // @route POST /activity
 // @desc Post New Activity
 // @access By Token
-router.post('/', getToken, async (req, res) => {
-  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
+router.post('/', getToken, (req, res) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, (err, authData) => {
     if (err) {
-      res.sendStatus(401);
-    } else { 
-      const activity = req.body;
-      activity.userId = authData.userId;
-      await Activity.create(activity, (error, createdActivity) => {
-        if (error) {
-          res.sendStatus(400);
-        } else {
-          res.json(createdActivity);
-        }
-      });
+      return res.sendStatus(401);
     }
-  })
+    const activity = req.body;
+    activity.userId = authData.userId;
+    Activity.create(activity)
+      .then(createdActivity => {
+        res.json(createdActivity);
+      }).catch(() => {
+        res.sendStatus(400);
+      });
+    return res;
+  });
 });
 
 // @route DELETE /activity
 // @desc Delete Activity By Title
 // @access By Token
-router.delete('/', getToken, async (req, res) => {
-  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
+router.delete('/', getToken, (req, res) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, (err, authData) => {
     if (err) {
-      res.sendStatus(401);
-    } else {
-      const activity = req.body;
-      await Activity.findOneAndDelete({title: activity.title, userId: authData.userId}, error => {
-        if (error) {
-          res.sendStatus(404);
-        } else {
-          res.sendStatus(200);
-        }
-      });
+      return res.sendStatus(401);
     }
-  })
+    const activity = req.body;
+    
+    // Assuming that this users's activity name is unique
+    Activity.findOneAndDelete({title: activity.title, userId: authData.userId})
+      .then(() => {
+        res.sendStatus(200);
+      }).catch(() => {
+        res.sendStatus(404);
+      });
+    return res;
+  });
 });
 
 // This method is not into current project's documentation
-router.put('/', getToken, async (req, res) => {
-  jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
+router.put('/', getToken, (req, res) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, (err, authData) => {
     if (err) {
-      res.sendStatus(401);
-    } else {
-      const activity = req.body;
-      await Activity.findByIdAndUpdate(authData.userId, 
-        { title: activity.title, 
-          successCriteria: activity.successCriteria, 
-          frequency: activity.frequency,
-          status: activity.status,
-        }, (dbErr, updatedActivity) => {
-        if (dbErr) {
-          res.sendStatus(404);
-        } else {
-          res.json(updatedActivity);
-        }
-      });
+      return res.sendStatus(401);
     }
-  })
+    const activity = req.body;
+
+    // Assuming that this users's activity name is unique
+    Activity.findOneAndUpdate({title: activity.title, userId: authData.userId}, 
+      { title: activity.title, 
+        successCriteria: activity.successCriteria, 
+        frequency: activity.frequency,
+        status: activity.status,
+      }).then(updatedActivity => {
+        res.json(updatedActivity);
+      }).catch(() => {
+        res.sendStatus(404);
+      });
+    return res;
+  });
 });
 
 module.exports = router;
