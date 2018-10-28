@@ -23,6 +23,6 @@ mongoose.connect(process.env.MONGO_HOST, { useNewUrlParser: true })
 
 const server = http.createServer(app);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3005;
  
 server.listen(port, () => console.log(`Server started on port ${port}`));
