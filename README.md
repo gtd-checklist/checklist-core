@@ -1,5 +1,7 @@
 # checklist-core
 
+[![Build Status](https://travis-ci.org/gtd-checklist/checklist-core.svg?branch=master)](https://travis-ci.org/gtd-checklist/checklist-core)
+
 ## Installation
 
 ```
