@@ -4,8 +4,15 @@ node_js:
 cache:
   directories:
     - "node_modules"
+script: npm test
 before_deploy: npm i now --no-save
 deploy:
+  - provider: script
+    script: now --t $NOW_TOKEN
+    skip_cleanup: true
+    on:
+      all_branches: true
+      master: false
   - provider: script
     script: now --t $NOW_TOKEN --public && now alias --t $NOW_TOKEN --public
     skip_cleanup: true
