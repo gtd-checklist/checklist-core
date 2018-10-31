@@ -9,6 +9,7 @@ const router = express.Router();
 // @access  Public
 router.post('/', (req, res) => {
   const user = req.body;
+
   User.create(user).then(newUser => {
     res.json(newUser);
   }).catch(() => {

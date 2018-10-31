@@ -3,26 +3,30 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const http = require('http');
 
-const { user, activity, auth } = require('./src/routes');
+const { router } = require('./src/routes');
 
 require('dotenv').config();
 
 const app = express();
+
 app.use(cors());
 app.use(bodyParser.json());
+app.use('/api/v1', router);
 
-app.use('/api/user', user);
-app.use('/api/activity', activity);
-app.use('/api/auth', auth);
+const options = {
+  useNewUrlParser: true,
+  autoReconnect: true
+};
 
-mongoose.connect(process.env.MONGO_HOST, { useNewUrlParser: true })
-  .then(() => console.log('MongoDB Connected...'))
-  .catch(err => console.log(err));
-
-const server = http.createServer(app);
+mongoose
+  .connect(
+    process.env.MONGO_HOST,
+    options
+  )
+  .then(() => console.log('MongoDB connected...'))
+  .catch(console.error);
 
 const port = process.env.PORT || 3005;
- 
-server.listen(port, () => console.log(`Server started on port ${port}`));
+
+app.listen(port, () => console.log(`Server started on port ${port}`));
