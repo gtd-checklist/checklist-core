@@ -9,6 +9,10 @@ router.use('/user', user);
 router.use('/activity', activity);
 router.use('/auth', auth);
 
+router.get('/', (req, res) => {
+  res.send('Hello, world!');
+})
+
 module.exports = {
   router
 };
