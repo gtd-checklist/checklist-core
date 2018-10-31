@@ -1,13 +1,28 @@
+/* eslint-disable no-console */
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const http = require('http');
+
+const { user, activity, auth } = require('./src/routes');
+
 require('dotenv').config();
 
-const express = require('express');
-
 const app = express();
+app.use(cors());
+app.use(bodyParser.json());
 
-const PORT = process.env.PORT || 3000;
+app.use('/api/user', user);
+app.use('/api/activity', activity);
+app.use('/api/auth', auth);
 
-app.get('/', (req, res) => {
-  res.send('hello, world');
-});
+mongoose.connect(process.env.MONGO_HOST, { useNewUrlParser: true })
+  .then(() => console.log('MongoDB Connected...'))
+  .catch(err => console.log(err));
 
-app.listen(PORT, () => console.log(`server listening on port ${PORT}!`));
+const server = http.createServer(app);
+
+const port = process.env.PORT || 3005;
+ 
+server.listen(port, () => console.log(`Server started on port ${port}`));
