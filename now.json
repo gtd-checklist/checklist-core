@@ -1,0 +1,10 @@
+{
+  "name": "checklist",
+  "alias": "checklist",
+  "env": {
+    "JWT_SECRET": "@jwt_secret",
+    "MONGO_HOST": "@mongo_host",
+    "NODE_ENV": "production",
+    "PORT": "443"
+  }
+}
