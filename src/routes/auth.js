@@ -1,6 +1,7 @@
 const express = require('express');
 
 const { User } = require('../models');
+const JWT_EXPIRE_TIME = require('../../config');
 
 const router = express.Router();
 
@@ -14,9 +15,9 @@ router.post('/', async (req, res) => {
   if (!user.authenticate(password)) {
     return res.status(401).send('Password does not match');
   }
-  const token = user.generateToken();
+  const { token, exp } = user.generateToken();
   delete user.password; // This is not working :(
-  return res.json({ token, user });
+  return res.json({ token, exp, user });
 });
 
 module.exports = router;
