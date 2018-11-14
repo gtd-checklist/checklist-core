@@ -10,6 +10,7 @@ const router = express.Router();
 router.post('/', (req, res) => {
   const user = req.body;
 
+  // TO DO: it should be not possible to create many users with the same email
   User.create(user).then(newUser => {
     res.json(newUser);
   }).catch(() => {

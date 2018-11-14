@@ -8,7 +8,7 @@ function validateToken(req, res, next) {
   }
   const token = bearerHeader.split(' ')[1];
 
-  jwt.verify(token, process.env.JWT_SECRET, async (err, authData) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, authData) => {
     if (err) {
       next(err);
     }
