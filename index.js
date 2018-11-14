@@ -5,6 +5,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 const { router } = require('./src/routes');
+const { errorHandler } = require('./src/middleware/errorHandler');
 
 require('dotenv').config();
 
@@ -13,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/api/v1', router);
+// app.use(errorHandler);
 
 const options = {
   useNewUrlParser: true,
