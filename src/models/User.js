@@ -6,8 +6,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('jsonwebtoken');
 
-const JWT_EXPIRE_TIME = require('../../config');
-
 require('dotenv').config();
 
 const { Schema } = mongoose;
@@ -66,9 +64,9 @@ UserSchema.method({
    */
   generateToken() {
     const token = jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
-      expiresIn: JWT_EXPIRE_TIME
+      expiresIn: `${process.env.JWT_EXPIRE_TIME}s`
     });
-    const exp = Math.floor(Date.now()/1000) + JWT_EXPIRE_TIME;
+    const exp = Date.now() + process.env.JWT_EXPIRE_TIME*1000;
     return { token, exp };
   },
 

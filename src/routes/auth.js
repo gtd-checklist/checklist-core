@@ -1,7 +1,6 @@
 const express = require('express');
 
 const { User } = require('../models');
-const JWT_EXPIRE_TIME = require('../../config');
 
 const router = express.Router();
 
@@ -16,7 +15,7 @@ router.post('/', async (req, res) => {
     return res.status(401).send('Password does not match');
   }
   const { token, exp } = user.generateToken();
-  delete user.password; // This is not working :(
+  user.password = undefined;
   return res.json({ token, exp, user });
 });
 
