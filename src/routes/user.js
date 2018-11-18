@@ -7,8 +7,12 @@ const router = express.Router();
 // @route POST /user
 // @desc  Create new user
 // @access  Public
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const user = req.body;
+  const duplicateUser = await User.findOne({email: user.email});
+  if (duplicateUser) {
+    res.status(403).json('User with this email already exist');
+  }
 
   User.create(user).then(newUser => {
     res.json(newUser);
