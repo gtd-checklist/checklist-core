@@ -66,8 +66,7 @@ UserSchema.method({
     const token = jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
       expiresIn: `${process.env.JWT_EXPIRE_TIME}s`
     });
-    const exp = Date.now() + process.env.JWT_EXPIRE_TIME*1000;
-    return { token, exp };
+    return token;
   },
 
   decodeToken(token) {

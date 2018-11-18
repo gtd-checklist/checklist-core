@@ -14,9 +14,8 @@ router.post('/', async (req, res) => {
   if (!user.authenticate(password)) {
     return res.status(401).send('Password does not match');
   }
-  const { token, exp } = user.generateToken();
-  user.password = undefined;
-  return res.json({ token, exp, user });
+  const token = user.generateToken();
+  return res.json({ token, user });
 });
 
 module.exports = router;
