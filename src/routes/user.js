@@ -14,6 +14,7 @@ router.post('/', async (req, res) => {
     res.status(403).json('User with this email already exist');
   }
 
+  // TO DO: it should be not possible to create many users with the same email
   User.create(user).then(newUser => {
     res.json(newUser);
   }).catch(() => {

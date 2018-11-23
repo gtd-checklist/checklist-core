@@ -63,7 +63,10 @@ UserSchema.method({
    * @return {String} signed JSON web token
    */
   generateToken() {
-    return jwt.sign({ userId: this._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
+      expiresIn: `${process.env.JWT_EXPIRE_TIME}s`
+    });
+    return token;
   },
 
   decodeToken(token) {
