@@ -1,8 +1,6 @@
 const express = require('express');
-const Joi = require('joi');
 
 const { User } = require('../models');
-const schema = require('../validators/user');
 
 const router = express.Router();
 
@@ -11,11 +9,6 @@ const router = express.Router();
 // @access  Public
 router.post('/', async (req, res) => {
   const user = req.body;
-
-  const validation = Joi.validate(user, schema);
-  if (validation.error) {
-    return res.status(403).send('Incorrect data');
-  }
 
   const duplicateUser = await User.findOne({email: user.email});
   if (duplicateUser) {

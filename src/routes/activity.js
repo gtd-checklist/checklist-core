@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { Activity } = require('../models');
-const validateToken = require('../middleware/validators');
+const { validateToken } = require('../middleware/validators');
 
 const router = express.Router();
 require('dotenv').config();
