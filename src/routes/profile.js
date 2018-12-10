@@ -1,25 +1,44 @@
-const express = require('express');
 
-const { User } = require('../models');
+const express = require('express');
+const Joi = require('joi');
+
+const { statusCodes } = require('../constants');
+const { User } = require('../dal');
+
+const schema = {
+  username: Joi.string()
+    .alphanum()
+    .min(3)
+    .max(30)
+    .required(),
+  password: Joi.string()
+    .regex(/^[a-zA-Z0-9]{3,30}$/)
+    .required(),
+  email: Joi.string()
+    .email({ minDomainAtoms: 2 })
+    .required()
+};
 
 const router = express.Router();
 
-// @route POST /user
-// @desc  Create new user
-// @access  Public
 router.post('/', async (req, res) => {
-  const user = req.body;
+  const { email, password } = req.body;
 
-  const duplicateUser = await User.findOne({email: user.email});
-  if (duplicateUser) {
-    return res.status(403).json('User with this email already exist');
+  const user = await User.findOne({ email }).select('+password');
+
+  if (!user) {
+    return res.status(statusCodes.UNAUTHORIZED).send('User not found');
   }
 
-  return User.create(user).then(newUser => {
-    res.json(newUser);
-  }).catch(() => {
-    res.status(400).json('Bad request');
-  });
-})
+  if (!user.authenticate(password)) {
+    return res.status(statusCodes.UNAUTHORIZED).send('Password does not match');
+  }
 
-module.exports = router;
+  const token = user.generateToken();
+  return res.json({ token, user });
+});
+
+module.exports = {
+  router,
+  schema
+};

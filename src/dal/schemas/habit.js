@@ -13,10 +13,9 @@ const HabitSchema = new Schema({
       max: 6
     }
   ],
-  kind: {
-    type: String,
-    required: true,
-    enum: ['Simple', 'Numerical']
+  isNumerical: {
+    type: Boolean,
+    required: true
   },
   successCriteria: {
     number: Number,
