@@ -5,6 +5,7 @@
     "JWT_SECRET": "@jwt_secret",
     "MONGO_HOST": "@mongo_host",
     "NODE_ENV": "production",
-    "PORT": "443"
+    "PORT": "443",
+    "JWT_EXPIRE_TIME": "1800"
   }
 }

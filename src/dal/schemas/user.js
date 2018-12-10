@@ -1,10 +1,9 @@
-/* eslint no-underscore-dangle: 0 */
-/* eslint-disable consistent-return */
-// disabled this rule because "function" in callbacks. Using arrow => function leads to wrong "this" context
-/* eslint func-names: 0 */
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('jsonwebtoken');
+const util = require('util');
+
+const { HabitSchema } = require('./habit');
 
 require('dotenv').config();
 
@@ -13,39 +12,39 @@ const { Schema } = mongoose;
 const UserSchema = new Schema({
   username: {
     type: String,
-    required: true,
+    required: true
   },
   password: {
     type: String,
-    required: true,
+    required: true
   },
   email: {
     type: String,
-    required: true,
+    required: true
   },
+  habits: [HabitSchema]
 });
 
-UserSchema.pre('save', function(next) {
+const getHash = util.promisify(bcrypt.hash);
+
+async function hashifyPassword(next) {
   const user = this;
-  bcrypt.hash(user.password, null, null, (err, hash) => {
-    if (err) return next(err);
-    user.password = hash;
-    next();
-  });
-});
 
-UserSchema.pre('update', function(next) {
-  if (!this.password) {
+  if (!user.password) {
     return;
   }
-  
-  const user = this;
-  bcrypt.hash(user.password, null, null, (err, hash) => {
-    if (err) return next(err);
+
+  try {
+    const hash = await getHash(user.password, null, null);
     user.password = hash;
     next();
-  });
-});
+  } catch (e) {
+    next(e);
+  }
+}
+
+UserSchema.pre('save', hashifyPassword);
+UserSchema.pre('update', hashifyPassword);
 
 UserSchema.method({
   /**
@@ -63,12 +62,13 @@ UserSchema.method({
    * @return {String} signed JSON web token
    */
   generateToken() {
+    /* eslint-disable no-underscore-dangle */
     return jwt.sign({ userId: this._id }, process.env.JWT_SECRET);
   },
 
   decodeToken(token) {
     return jwt.decode(token, { complete: true });
   }
-})
+});
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = { UserSchema };

@@ -6,12 +6,17 @@ const mongoose = require('mongoose');
 
 const { router } = require('./src/routes');
 
+// const { setUserId, initState, validateToken } = require('./src/middleware/validators');
+
 require('dotenv').config();
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+// app.use(initState);
+// app.use(validateToken);
+// app.use(setUserId);
 app.use('/api/v1', router);
 
 const options = {
