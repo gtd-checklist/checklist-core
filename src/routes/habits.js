@@ -12,7 +12,7 @@ const habitsData = {
       description: 'Подъем до 7 утра',
       isNumerical: false,
       repeat: ['пн', 'вт', 'ср', 'чт', 'пт'],
-      done: 'true'
+      done: true
     },
     {
       id: nanoid(),
@@ -20,7 +20,7 @@ const habitsData = {
       description: 'Тренажерный зал “Пушкин” в 12:00',
       isNumerical: false,
       repeat: ['вт', 'чт'],
-      done: 'false'
+      done: false
     },
     {
       id: nanoid(),
@@ -32,7 +32,7 @@ const habitsData = {
         number: 2,
         condition: 'LTE'
       },
-      done: 'false'
+      done: false
     }
   ]
 };
