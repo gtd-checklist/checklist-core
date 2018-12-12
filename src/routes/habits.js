@@ -4,7 +4,7 @@ const nanoid = require('nanoid');
 const router = express.Router();
 
 const habitsData = {
-  date: 'Mon Nov 26 2018 20:14:32 GMT+0300',
+  date: 'Wed Dec 12 2018 00:00:00 GMT+0300',
   habits: [
     {
       id: nanoid(),
